@@ -1,0 +1,11 @@
+{
+  "name": "google-maps-emails",
+  "version": "1.0.0",
+  "description": "Finding Urls from google places",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
