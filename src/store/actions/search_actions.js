@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
-    SEARCH
+    SEARCH,
+    SEARCH_CLEAR
 } from '../types'
 // const got = require('got');
 const jsdom = require("jsdom");
@@ -28,8 +29,6 @@ export async function search({state, search}){
         top_50.push(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent)
     }
 
-    let wed=[];
-    let coords_list = [];
     var place_website_list=[];
     var places_id_list = [];
     let z = 1;
@@ -55,16 +54,22 @@ export async function search({state, search}){
 
         // coords_list.push(search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng )
     }
-    console.log(places_id_list)
+    // console.log(places_id_list)
     let uniqueChars = [...new Set(places_id_list)];
     console.log(uniqueChars)
     var k;
     for (k = 0; k < uniqueChars.length; k++) {
-        const detail = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${uniqueChars[k]}&fields=name,rating,formatted_phone_number,website&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
-        console.log(detail.data.result.website)
-        place_website_list.push(detail.data.result.website)
+        try{
+            const detail = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${uniqueChars[k]}&fields=name,rating,formatted_phone_number,website&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+            console.log(detail.data.result.website)
+            place_website_list.push(detail.data.result.website)
+        } catch(e){
+            console.error(e);
+            console.log('error') 
+        }
+
     }
-    const request = place_website_list.filter(Boolean)
+    const request = [...new Set(place_website_list.filter(Boolean))]
 
 
     return{
@@ -72,4 +77,11 @@ export async function search({state, search}){
         payload:request
     }
 
+}
+
+export function clearSearch(search){
+    return{
+        type: SEARCH_CLEAR,
+        payload: null
+    }
 }

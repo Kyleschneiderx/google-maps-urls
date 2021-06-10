@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import {FormElement, SearchSchema } from './utils/searchHelper'
 import {connect} from 'react-redux';
-import { search } from './store/actions/search_actions'
+import { search, clearSearch } from './store/actions/search_actions'
 
 
 class App extends Component {
@@ -17,12 +17,61 @@ class App extends Component {
 
   onPostBook = (values) =>{
     this.props.dispatch(search(values))
-    this.setState({loading: true})
-  } 
+    console.log(this.props)
+    this.props.dispatch(clearSearch());
+  }
 
+  componentWillUnmount(){
 
-  render(){
-    console.log(process.env.REACT_APP_GOOGLE_API_KEY)
+  }
+
+  makeStatesSelector=()=>{
+    const US = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+    const render_list= []
+    for(let i=0; i<US.length; i++){
+      render_list.push(<option value={US[i].toLowerCase()}>{US[i]}</option>)
+    }
+    return(
+      render_list
+    )
+  }
+
+  loading =()=>{
+    console.log('In Loading')
+    if(this.props.search.loaded == true){
+      return(
+        this.props.search.search.map((item, index) =>(
+          <div key={index}>{item}</div>
+        ))
+      )
+    }
+
+    if(this.props.search.loaded === false){
+      return(
+        <div>
+          This might take a few minutes
+        </div>
+      )
+    }
+
+    // if(!this.props.search.loading || this.props.search.loading === undefined){
+    //   return(null)
+    // }else if(this.props.search.loaded){
+      
+    //   return(
+    //     console.log('in else if')
+
+    //   )
+    // }else{
+    //   <div>
+    //     this might take a minute
+    //   </div>
+    // }
+
+  }
+
+  render(){  
+    console.log(this.props.search.loaded)
     return (
       <div className="App">
         <div>
@@ -72,8 +121,7 @@ class App extends Component {
                             
                             >
                                     <option default>Select a rating</option>
-                                    <option value="id">ID</option>
-                                    <option value="pa">PA</option>
+                                    {this.makeStatesSelector()}
                             </FormElement>
                             
                             
@@ -89,12 +137,13 @@ class App extends Component {
         </div>
         
         <hr/>
-        {
-        this.state.loading ?
-          this.props.search.search.map((item, index) =>(
-          <div key={index}>{item}</div>
-        ))
-          :null
+        
+        {this.loading()
+        // this.props.search.search ?
+        //   this.props.search.search.map((item, index) =>(
+        //   <div key={index}>{item}</div>
+        // ))
+        //   :null
           }
       </div>
     );
@@ -110,3 +159,4 @@ function mapStateToProps(state){
 }
 
 export default connect(mapStateToProps)(App);
+
