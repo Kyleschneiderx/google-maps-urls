@@ -12,8 +12,13 @@ class App extends Component {
   state = {
     editorContentHtml:'',
     loading: false,
-    results: []
+    results: this.props.search
   }
+
+  onPostBook = (values) =>{
+    this.props.dispatch(search(values))
+    this.setState({loading: true})
+  } 
 
 
   render(){
@@ -29,6 +34,9 @@ class App extends Component {
             }}
             validationSchema={SearchSchema}
             onSubmit={(values, {resetForm})=>{
+              this.onPostBook({
+                ...values
+              });
               console.log(values)
               resetForm({});
             }}    
@@ -79,7 +87,15 @@ class App extends Component {
 
           </Formik>
         </div>
+        
         <hr/>
+        {
+        this.state.loading ?
+          this.props.search.search.map((item, index) =>(
+          <div key={index}>{item}</div>
+        ))
+          :null
+          }
       </div>
     );
 

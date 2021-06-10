@@ -13,6 +13,7 @@ const { JSDOM } = jsdom;
 export async function search({state, search}){
 
     console.log(search.replace(' ', '%20'))
+    console.log(state + ' ' + search)
 
     const vgmUrl= `https://localistica.com/usa/${state}/zipcodes/most-populated-zipcodes/`;
 
@@ -33,12 +34,12 @@ export async function search({state, search}){
     var places_id_list = [];
     let z = 1;
     for(z; z<=top_50.length; z++){
-        // const search = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${z}&key=AIzaSyBLNweAWL0C8ZQaoZ3S_AkPINbJhsiD7p8`)
         try {
-            const search = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${top_50[z]}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+            const search1 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${top_50[z]}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
             // console.log(search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng )
             // coords_list.push(search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng)
-            const result_by_location = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng}&radius=50000&keyword=${search.replace(' ', '%20')}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+            const search_term = search.replace(' ', '%20')
+            const result_by_location = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${search1.data.results[0].geometry.location.lat + ',' + search1.data.results[0].geometry.location.lng}&radius=50000&keyword=${search.replace(' ', '%20')}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
             let i=0;
             while (i < result_by_location.data.results.length) {
                 console.log(result_by_location.data.results[i].place_id)
