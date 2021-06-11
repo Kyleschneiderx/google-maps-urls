@@ -28,7 +28,7 @@ class App extends Component {
     const US = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
     const render_list= []
     for(let i=0; i<US.length; i++){
-      render_list.push(<option value={US[i].toLowerCase()}>{US[i]}</option>)
+      render_list.push(<option key={US[i]} value={US[i].toLowerCase()}>{US[i]}</option>)
     }
     return(
       render_list
