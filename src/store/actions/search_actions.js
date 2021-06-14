@@ -24,8 +24,8 @@ export async function search({state, search}){
     // console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(2) > td:nth-child(1) > a`).textContent);
 
     let i;
-    for(i=2; i<52; i++){
-        // console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent);
+    for(i=2; i<102; i++){
+        console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent);
         top_50.push(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent)
     }
 
@@ -57,11 +57,12 @@ export async function search({state, search}){
     // console.log(places_id_list)
     let uniqueChars = [...new Set(places_id_list)];
     // console.log(uniqueChars)
+    var email_list=[];
     var k;
     for (k = 0; k < uniqueChars.length; k++) {
         try{
             const detail = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${uniqueChars[k]}&fields=name,rating,formatted_phone_number,website&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
-            // console.log(detail.data.result.website)
+            console.log(detail.data.result.website)
             place_website_list.push(detail.data.result.website)
         } catch(e){
             console.error(e);
@@ -70,6 +71,26 @@ export async function search({state, search}){
 
     }
     const request = [...new Set(place_website_list.filter(Boolean))]
+
+    
+    
+    console.log(request.length)
+
+    // for (let x = 0; x < 30 ; x++) {
+    //     console.log("hello")
+    //     try{
+    //         const email = await axios.get(`https://api.hunter.io/v2/domain-search?domain=${request[x]}&api_key=${process.env.REACT_APP_HUNTER_API_KEY}`)
+    //         console.log(email)
+    //         console.log(x)
+    //         email_list.push(email.data)
+    //     } catch(e){
+    //         console.error(e);
+    //         console.log('error') 
+    //     }
+
+    // }
+
+    console.log(email_list)
 
 
     return{
