@@ -3,9 +3,7 @@ import {
     SEARCH,
     SEARCH_CLEAR
 } from '../types'
-// const got = require('got');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const cheerio = require("cheerio")
 
 
 
@@ -20,21 +18,29 @@ export async function search({state, search}){
 
     let top_50=[];
     const url = await axios.get(vgmUrl)
-    const dom = new JSDOM(url.data)
+    const dom = cheerio.load(url.data, { ignoreWhitespace: true })
+    let data =[]
+    dom('table tr td:nth-child(1)').each((i, elem) => {
+        data.push({
+          title : dom(elem).text().substr(19,5),
+        });
+    });
+    console.log(data);
     // console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(2) > td:nth-child(1) > a`).textContent);
 
-    let i;
-    for(i=2; i<102; i++){
-        console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent);
-        top_50.push(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent)
-    }
+    // let i;
+    // for(i=2; i<102; i++){
+    //     console.log(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent);
+    //     top_50.push(dom.window.document.querySelector(`#dgZipCodes > tbody > tr:nth-child(${i}) > td:nth-child(1) > a`).textContent)
+    // }
 
     var place_website_list=[];
     var places_id_list = [];
     let z = 1;
-    for(z; z<=top_50.length; z++){
+    for(z; z<=data.length; z++){
         try {
-            const search1 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${top_50[z]}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+            console.log(data[z].title)
+            const search1 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${data[z].title}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
             // console.log(search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng )
             // coords_list.push(search.data.results[0].geometry.location.lat + ',' + search.data.results[0].geometry.location.lng)
             const search_term = search.replace(' ', '%20')
