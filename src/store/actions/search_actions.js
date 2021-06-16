@@ -1,9 +1,11 @@
 import axios from 'axios';
 import {
     SEARCH,
-    SEARCH_CLEAR
+    SEARCH_CLEAR,
+    URL_UPLOAD
 } from '../types'
 const cheerio = require("cheerio")
+var Scraper = require("email-crawler");
 
 
 
@@ -102,6 +104,32 @@ export async function search({state, search}){
     return{
         type: SEARCH,
         payload:request
+    }
+
+}
+
+
+
+export async function csvUpload(urls){
+    console.log(urls.Urls)
+    var data = []
+    for(let i =0 ; i<urls.length; i++){
+        console.log(urls[i].Urls)
+        var emailscraper = new Scraper(urls[i].Urls);
+        const email = await emailscraper.getLevels(2)
+        console.log(email)
+        // for(let k=0; k<email.length; k++){
+        //     console.log(email[k])
+        //     data.push(email[k])
+            
+        // }
+        console.log(email)
+        data.push(email)
+    }
+    console.log(data)
+    return{
+        type: URL_UPLOAD,
+        payload: data
     }
 
 }

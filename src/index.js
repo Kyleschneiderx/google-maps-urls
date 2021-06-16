@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Routes from './routes';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
@@ -18,7 +18,7 @@ const createStoreWithMiddleware = createStore(reducers,composeWithDevTools(apply
 
 ReactDOM.render(
 <Provider store={createStoreWithMiddleware}>
-    <App/>
+    <Routes/>
 </Provider>
 , document.getElementById('root'))
 

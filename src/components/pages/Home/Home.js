@@ -1,10 +1,10 @@
-import './App.css';
+import './Home.css';
 import React, {Component} from 'react';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
-import {FormElement, SearchSchema } from './utils/searchHelper'
+import {FormElement, SearchSchema } from '../../../utils/searchHelper'
 import {connect} from 'react-redux';
-import { search, clearSearch } from './store/actions/search_actions'
+import { search, clearSearch } from '../../../store/actions/search_actions'
 
 
 class App extends Component {
@@ -107,7 +107,7 @@ class App extends Component {
                             />
                             <FormElement
                                 elData={{element:'select', value:values.state}}
-                                placeholder="Choose state to Search"
+                                placeholder="Choose State"
                                 name='state'
                                 onHandleChange={(e)=>handleChange(e)}
                                 onHandleBlur={(e)=>handleBlur(e)}
