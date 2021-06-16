@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactFileReader from 'react-file-reader';
 import Papa from 'papaparse'
 import {connect} from 'react-redux'
-import { csvUpload } from '../../../store/actions/search_actions'
+import { csvUpload, emptyUrl } from '../../../store/actions/search_actions'
 
 
 
@@ -34,11 +34,46 @@ class csvLoading extends Component {
         var urls = result.data;
         console.log(urls);
         this.sendData(urls)
+        this.props.dispatch(emptyUrl())
       }
 
       sendData(urls){
         console.log(urls)
         this.props.dispatch(csvUpload(urls))
+      }
+
+      loading =()=>{
+        console.log('In Loading')
+        if(this.props.urls.finished == true){
+          return(
+            this.props.urls.urls.map((item, index) =>(
+              <div key={index}>{item}</div>
+            ))
+          )
+        }
+    
+        if(this.props.urls.finished === false){
+          return(
+            <div>
+              This might take a few minutes
+            </div>
+          )
+        }
+    
+        // if(!this.props.search.loading || this.props.search.loading === undefined){
+        //   return(null)
+        // }else if(this.props.search.loaded){
+          
+        //   return(
+        //     console.log('in else if')
+    
+        //   )
+        // }else{
+        //   <div>
+        //     this might take a minute
+        //   </div>
+        // }
+    
       }
     
       render() {
@@ -59,6 +94,8 @@ class csvLoading extends Component {
             />
             <p />
             <button onClick={this.importCSV}> Upload now!</button>
+            <hr/>
+            {this.loading()}
           </div>
         );
       }

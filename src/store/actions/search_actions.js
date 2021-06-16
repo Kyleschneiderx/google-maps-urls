@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
     SEARCH,
     SEARCH_CLEAR,
-    URL_UPLOAD
+    URL_UPLOAD,
+    EMPTY_URL
 } from '../types'
 const cheerio = require("cheerio")
 var Scraper = require("email-crawler");
@@ -113,25 +114,39 @@ export async function search({state, search}){
 export async function csvUpload(urls){
     console.log(urls.Urls)
     var data = []
-    for(let i =0 ; i<urls.length; i++){
-        console.log(urls[i].Urls)
-        var emailscraper = new Scraper(urls[i].Urls);
-        const email = await emailscraper.getLevels(2)
-        console.log(email)
-        // for(let k=0; k<email.length; k++){
-        //     console.log(email[k])
-        //     data.push(email[k])
-            
-        // }
-        console.log(email)
-        data.push(email)
+    var data_by_url = []
+    try{
+
+        for(let i =0 ; i<urls.length; i++){
+            console.log(urls[i].Urls)
+            var emailscraper = new Scraper(urls[i].Urls);
+            const email = await emailscraper.getLevels(2)
+            console.log(email)
+            for(let k=0; k<email.length; k++){
+                console.log(email[k])
+                data.push(email[k])
+                
+            }
+            console.log(email)
+            data_by_url.push({'url': urls[i].Urls, 'emails': email })
+        }
+        console.log(data)
+    }catch(e){
+        console.error(e)
     }
-    console.log(data)
+
     return{
         type: URL_UPLOAD,
         payload: data
     }
 
+}
+
+export function emptyUrl(search){
+    return{
+        type: EMPTY_URL,
+        payload: null
+    }
 }
 
 export function clearSearch(search){
